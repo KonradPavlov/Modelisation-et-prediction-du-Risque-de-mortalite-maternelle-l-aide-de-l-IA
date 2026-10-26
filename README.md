@@ -1,4 +1,4 @@
-# MediRisk — Système de Prédiction du Risque Maternel
+# MediRisk : Système de Prédiction du Risque Maternel
 
 **PROJET 2 : Modélisation et Prédiction du Risque de Mortalité Maternelle à l'aide de l'IA**
 
