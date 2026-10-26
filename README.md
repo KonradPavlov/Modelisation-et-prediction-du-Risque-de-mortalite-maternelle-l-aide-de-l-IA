@@ -1,130 +1,58 @@
 # MediRisk — Système de Prédiction du Risque Maternel
 
-Projet EEIA · Bénin Excellence / PNUD / Fondation Vallet
+**PROJET 2 : Modélisation et Prédiction du Risque de Mortalité Maternelle à l'aide de l'IA**
 
-## Structure du projet
+Ecole d'Eté sur l'Intelligence Artificielle — EEIA BENIN EXCELLENCE
+Fondation VALLET / BE / PNUD
 
-Projet EEIA/
-├── projet eeia-Copy1.ipynb          ← Notebook d'entraînement du modèle
-├── Maternal_Health_Risk_Data_Set_Modified.csv  ← Données d'entraînement
-├── app.py                           ← Serveur Flask (optionnel)
-└── interface/
-    ├── index.html                   ← Interface web principale
-    ├── app.js                       ← Logique frontend + inférence ML
-    ├── style.css                    ← Styles
-    └── model.json                   ← Modèle Random Forest exporté à régénérer
+> Utiliser l'Intelligence Artificielle pour prédire les grossesses à risque, aider le personnel médical à mieux décider, et réduire la mortalité maternelle.
 
-## Étape 1 — Entraîner et exporter le modèle (Jupyter)
+## Sommaire
 
-À faire une seule fois (ou chaque fois que tu changes les données).
+- [Objectifs](#objectifs)
+- [Matériels](#matériels)
+- [Méthodologie](#méthodologie)
+- [Résultats](#résultats)
+- [Structure du projet](#structure-du-projet)
+- [Etape 1 — Entraîner et exporter le modèle](#etape-1--entraîner-et-exporter-le-modèle)
+- [Etape 2 — Lancer l'interface web](#etape-2--lancer-linterface-web)
+- [Etape 3 — Utiliser l'interface](#etape-3--utiliser-linterface)
+- [Conclusion](#conclusion)
+- [Technologies](#technologies)
+- [Participants](#participants)
 
-### 1.1 Ouvrir le notebook
+## Objectifs
 
-Lance Jupyter Lab ou Jupyter Notebook, puis ouvre :
+- Utiliser l'Intelligence Artificielle pour prédire les grossesses à risque.
+- Améliorer la prise de décision clinique pour le personnel médical.
+- Réduire la mortalité maternelle.
 
-projet eeia-Copy1.ipynb
+## Matériels
 
-### 1.2 Exécuter toutes les cellules dans l'ordre
+**Source des données :** Kaggle
 
-Utilise Kernel → Restart & Run All (ou Ctrl+Enter cellule par cellule).
-
-Les cellules font dans l'ordre :
-
-- Chargement des données CSV
-- Nettoyage (valeurs manquantes, doublons, outliers)
-- Visualisations (histogrammes, boxplots, pairplot)
-- Normalisation MinMaxScaler
-- Entraînement et évaluation du modèle
-
-### 1.3 Exécuter la cellule d'export
-
-La dernière cellule (section "Export du modèle Random Forest → interface/model.json") :
-
-- Ré-entraîne le Random Forest sur toutes les données nettoyées
-- Affiche l'accuracy de validation (~98.5%)
-- Génère automatiquement interface/model.json
-
-Tu dois voir dans la sortie :
-
-Accuracy (validation 80/20) : 0.9853
-...
-model.json exporté → interface/model.json
-Classes : ['high risk', 'low risk']
-Arbres : 100
-Features: ['Age', 'SystolicBP', 'DiastolicBP', 'BS', 'BodyTemp', 'HeartRate']
-
-## Étape 2 — Lancer l'interface web
-
-Il y a deux façons d'ouvrir l'interface. Choisis l'une ou l'autre.
-
-### Option A — Directement dans le navigateur (le plus simple)
-
-Ouvre simplement ce fichier dans ton navigateur :
-
-interface/index.html
-
-Double-clique dessus depuis l'explorateur de fichiers, ou fais glisser le fichier dans Chrome/Edge/Firefox.
-
-Attention : Certains navigateurs bloquent le chargement de model.json depuis un fichier local.
-Si la prédiction affiche une erreur, utilise l'Option B.
-
-### Option B — Via le serveur Flask (recommandé)
-
-Prérequis Python :
-
-pip install flask
-
-Lancer le serveur :
-
-python app.py
-
-Ouvrir dans le navigateur :
-
-http://127.0.0.1:5000
-
-## Étape 3 — Utiliser l'interface
-
-### Onglet Analyse
-
-Remplis les 6 paramètres vitaux de la patiente :
-
-- Âge (années)
-- Tension Systolique (mmHg)
-- Tension Diastolique (mmHg)
-- Glycémie (mmol/L)
-- Température (°F)
-- Fréquence cardiaque (bpm)
-
-Les champs se colorent automatiquement :
-
-- Vert = valeur normale
-- Orange = attention
-- Rouge = anomalie
-
-Clique sur Lancer l'analyse → le résultat apparaît immédiatement :
-
-LOW RISK = risque faible
-HIGH RISK = risque élevé (avec %)
-
-Clique sur Rapport pour générer un rapport clinique complet, ou Imprimer pour l'imprimer.
-
-### Onglet Historique
-
-Retrouve toutes les analyses effectuées pendant la session
-
-### Onglet Dashboard
-
-Statistiques globales de la session (KPIs, graphiques Low/High Risk, anomalies)
-
-### MediBot
-
-Bouton en bas à droite → chatbot d'assistance clinique (questions sur les paramètres, les risques, etc.)
-
-## Résumé des commandes
-
-| Action | Commande |
+| Effectif | Nombre |
 | --- | --- |
-| Régénérer le modèle | Exécuter toute la cellule d'export dans le notebook |
-| Lancer le serveur Flask | python app.py |
-| URL de l'interface (Flask) | http://127.0.0.1:5000 |
-| URL santé API | http://127.0.0.1:5000/health |
+| Effectif brut | 679 données cliniques / 677 patients cliniques |
+| Effectif final analysé | 337 (après suppression des doublons cliniques) |
+
+## Méthodologie
+
+**1. Préparation des données :** nettoyage d'une cohorte de patients (déduplication des enregistrements identiques, traitement des valeurs manquantes et aberrantes) sur les indicateurs cliniques : tension artérielle, glycémie, température, fréquence cardiaque.
+
+**2. Feature engineering & split :** normalisation des variables cliniques (Min-Max Scaling) et séparation train/test stratifiée (80/20) pour préserver la proportion réelle des classes à risque et éviter toute fuite de données entre entraînement et évaluation.
+
+**3. Analyse descriptive :** importance des variables.
+
+**4. Modélisation :** deux modèles de classification (Régression Logistique, Random Forest) ont prédit le niveau de risque des patientes. Le Random Forest a surpassé la régression logistique avec 98,5% de précision sur le jeu de données test (AUC = 1,00), la glycémie (BS) étant le facteur le plus discriminant.
+
+## Résultats
+
+**Évaluation du Risque de Mortalité Maternelle**
+
+| Paramètre | Valeur |
+| --- | --- |
+| Âge | 28 ans |
+| Tension artérielle | 120 mmHg |
+| Glycémie (BS) | 92 mg/dL |
+| Température
